@@ -235,7 +235,7 @@
     "href": "slides/index.html#if_else",
     "title": "Best Practices in R",
     "section": "if_else()",
-    "text": "if_else()\n\nsome_flights |&gt; \n  mutate(dep_delay_cat = if_else(is.na(dep_delay), NA, \"We have a value\")) |&gt; \n  slice_sample(n = 5, by = dep_delay_cat) |&gt; \n  select(starts_with(\"dep_delay\"))\n\n# A tibble: 10 × 2\n   dep_delay dep_delay_cat  \n       &lt;dbl&gt; &lt;chr&gt;          \n 1        -1 We have a value\n 2        60 We have a value\n 3        61 We have a value\n 4         2 We have a value\n 5         2 We have a value\n 6        NA &lt;NA&gt;           \n 7        NA &lt;NA&gt;           \n 8        NA &lt;NA&gt;           \n 9        NA &lt;NA&gt;           \n10        NA &lt;NA&gt;"
+    "text": "if_else()\n\nsome_flights |&gt; \n  mutate(dep_delay_cat = if_else(is.na(dep_delay), NA, \"We have a value\")) |&gt; \n  slice_sample(n = 5, by = dep_delay_cat) |&gt; \n  select(starts_with(\"dep_delay\"))\n\n# A tibble: 10 × 2\n   dep_delay dep_delay_cat  \n       &lt;dbl&gt; &lt;chr&gt;          \n 1        -4 We have a value\n 2        27 We have a value\n 3        -6 We have a value\n 4        -1 We have a value\n 5        -5 We have a value\n 6        NA &lt;NA&gt;           \n 7        NA &lt;NA&gt;           \n 8        NA &lt;NA&gt;           \n 9        NA &lt;NA&gt;           \n10        NA &lt;NA&gt;"
   },
   {
     "objectID": "slides/index.html#case_when",
