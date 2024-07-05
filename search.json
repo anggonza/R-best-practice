@@ -2,372 +2,372 @@
   {
     "objectID": "slides/index.html#outline",
     "href": "slides/index.html#outline",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Outline",
     "text": "Outline\n\nReproducibility & debugging\nStyle\nData wrangling\nI/O"
   },
   {
     "objectID": "slides/index.html#lets-start-with-a-bad-example",
     "href": "slides/index.html#lets-start-with-a-bad-example",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Let’s start with a bad example!",
     "text": "Let’s start with a bad example!\n\n1setwd(\"C:\\\\Users\\\\username\\\\My Projects\\\\R for best practices\")\n\ndf&lt;-read.csv( \"Flight Subset 2013.csv\")\n2df$month_name = month.name[df$month]\n3df$carrier &lt;- as.factor(df$carrier)\ndf$tailnum &lt;- as.factor(df$tailnum)\ndf$origin &lt;- as.factor(df$origin)\n4for(i in 1:length(df$dep_delay)){\n5if(is.na(df$dep_delay[[i]])){\ndf[i, \"dep_delay_cat\"] &lt;- NA\n}else if(df$dep_delay[[i]] &lt; -30){\n    df[i, \"dep_delay_cat\"] &lt;- \"Early\"\n       }else if(df$dep_delay[[i]] &lt; 30){\n    df[i, \"dep_delay_cat\"] &lt;- \"Kind of on time\"\n  } else {\n    df[i, \"dep_delay_cat\"] &lt;- \"Late\"\n  }\n}\n6df$dep_delay_cat &lt;- as.factor(df$dep_delay_cat)\n\n\n1\n\nNaming conventions\n\n2\n\nAssignment operator\n\n3\n\nRewriting the same variable, and with the same operation!\n\n4\n\n1:length(x) (and spaces)\n\n5\n\nfor loop to create a categorical variable (and spaces)\n\n6\n\nAgain 3!\n\n\n\n\n\nAlso: not using the pipe"
   },
   {
     "objectID": "slides/index.html#section",
     "href": "slides/index.html#section",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "",
     "text": "setwd()\n\n“/” or “\\\\” depending on the OS!\n\nThe (absolute) path needs to be updated WHEN you:\n\nmove your script around\nwork from a different device, a server…\nshare your script with someone else\n\n\nProject-based workflow\n\nR projects, git repositories…\nPortable: relevant code and data together\nPaths relative to the root of a project\n\n\n\n\n\nProject oriented workflows"
   },
   {
     "objectID": "slides/index.html#here",
     "href": "slides/index.html#here",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "{here}",
     "text": "{here}\n\n\n\nlibrary(here)\n\ni_am(\"index.qmd\")\n# here()\nhere() |&gt; dir() |&gt; length() |&gt; print()\n\n[1] 6\n\nhere(\"analysis\") |&gt; dir() |&gt; print()  \n\n[1] \"model.R\"\n\nsource(here(\"analysis\", \"model.R\"))   \n\n[1] \"These are the contents of model.R\"\n\n\n\n\n\n\nIllustration by Allison Horst.\n\n\n\n\n\n\nNothing happens as long as the path is the path of this file relative to the root of the project.\nGet the number of files/directories in the root of the project\nGet the contents of the “analysis” directory\nSource the “model.R” script in the “analysis” directory.\n\n\n\n{here}"
   },
   {
     "objectID": "slides/index.html#git",
     "href": "slides/index.html#git",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "git",
     "text": "git\n\n\n\nR projects can be git repositories\nVersion control: keep track of the changes in your code, data, output…\nShare and collaborate via GitLab, Github…\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHappy Git With R"
   },
   {
     "objectID": "slides/index.html#renv",
     "href": "slides/index.html#renv",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "{renv}",
     "text": "{renv}\n\n\n\nCan be good practice, but it’s not as necessary as with Python\nKeeps track of R and package versions\n\n\nlibrary(renv)\n1init()\n2install.packages(\"tidyverse\")\ninstall.packages(\"reprex\")\n3snapshot()\n# Someone else uses your project\n4restore()\n\n\n1\n\nInitialize your virtual environment.\n\n2\n\nInstall some packages (in the environment).\n\n3\n\nRegister the status.\n\n4\n\nIn another system, recover the status.\n\n\n\n\n\n\n\n\n\nR users don’t deal with different versions of R packages like Python users do with Python modules, since they are mostly centrally managed by CRAN or other repositories. But it can still be useful practice in some case, “if you really care about reproducibility” (in Hadley Wickham’s words).\n\n\n{renv}"
   },
   {
     "objectID": "slides/index.html#exercise",
     "href": "slides/index.html#exercise",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Exercise",
     "text": "Exercise\n\nGo to GitHub and fork the following repository: https://github.com/montesmariana/r-best-practices-exercises\nFrom RStudio, create a new project from version control and provide the username and repository name of your fork\nWith the new project open in RStudio, restore the {renv} environment.\n\n\nPhoto by Brett Jordan on Unsplash"
   },
   {
     "objectID": "slides/index.html#reprex-minimal-reproducible-examples",
     "href": "slides/index.html#reprex-minimal-reproducible-examples",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "{reprex}: Minimal reproducible examples",
     "text": "{reprex}: Minimal reproducible examples\nThere is some code to reproduce…\n\n\n\nsth_is_wrong.R\n\nlibrary(nycflights13)\ndf &lt;- head(flights)\nfor (i in 1:length(df$dep_delay)) {\n  if (is.na(df$dep_delay[[i]])) {\n    df[i, \"dep_delay_cat\"] &lt;- NA\n  } else if(df$dep_delay[[i]] &lt; -30) {\n    df[i, \"dep_delay_cat\"] &lt;- delay_categories[[1]]\n  } else if(df$dep_delay[[i]] &lt; 30) {\n    df[i, \"dep_delay_cat\"] &lt;- delay_categories[[2]]\n  } else {\n    df[i, \"dep_delay_cat\"] &lt;- delay_categories[[3]]\n  }\n}\ndelay_categories &lt;- c(\"Early\", \"Kind of on time\", \"Late\")"
   },
   {
     "objectID": "slides/index.html#reprex-minimal-reproducible-examples-1",
     "href": "slides/index.html#reprex-minimal-reproducible-examples-1",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "{reprex}: Minimal reproducible examples",
     "text": "{reprex}: Minimal reproducible examples\nIn the console (or with the RStudio add-on):\nlibrary(reprex)\nreprex(here(\"R\", \"sth_is_wrong.R\"))"
   },
   {
     "objectID": "slides/index.html#section-1",
     "href": "slides/index.html#section-1",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "",
-    "text": "sth_is_wrong_reprex.md is created\n\n\nlibrary(nycflights13)\ndf &lt;- head(flights)\nfor (i in 1:length(df$dep_delay)) {\n  if (is.na(df$dep_delay[[i]])) {\n    df[i, \"dep_delay_cat\"] &lt;- NA\n  } else if(df$dep_delay[[i]] &lt; -30) {\n    df[i, \"dep_delay_cat\"] &lt;- delay_categories[[1]]\n  } else if(df$dep_delay[[i]] &lt; 30) {\n    df[i, \"dep_delay_cat\"] &lt;- delay_categories[[2]]\n  } else {\n    df[i, \"dep_delay_cat\"] &lt;- delay_categories[[3]]\n  }\n}\n#&gt; Error in eval(expr, envir, enclos): object 'delay_categories' not found\ndelay_categories &lt;- c(\"Early\", \"Kind of on time\", \"Late\")\nCreated on 2024-07-04 with reprex v2.1.0"
+    "text": "sth_is_wrong_reprex.md is created\n\n\nlibrary(nycflights13)\ndf &lt;- head(flights)\nfor (i in 1:length(df$dep_delay)) {\n  if (is.na(df$dep_delay[[i]])) {\n    df[i, \"dep_delay_cat\"] &lt;- NA\n  } else if(df$dep_delay[[i]] &lt; -30) {\n    df[i, \"dep_delay_cat\"] &lt;- delay_categories[[1]]\n  } else if(df$dep_delay[[i]] &lt; 30) {\n    df[i, \"dep_delay_cat\"] &lt;- delay_categories[[2]]\n  } else {\n    df[i, \"dep_delay_cat\"] &lt;- delay_categories[[3]]\n  }\n}\n#&gt; Error in eval(expr, envir, enclos): object 'delay_categories' not found\ndelay_categories &lt;- c(\"Early\", \"Kind of on time\", \"Late\")\nCreated on 2024-07-05 with reprex v2.1.0"
   },
   {
     "objectID": "slides/index.html#interactive-debugging",
     "href": "slides/index.html#interactive-debugging",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Interactive debugging",
     "text": "Interactive debugging\n\n\n\nbrowser()\nBreakpoints"
   },
   {
     "objectID": "slides/index.html#tips-for-r-scripts",
     "href": "slides/index.html#tips-for-r-scripts",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Tips for R scripts",
     "text": "Tips for R scripts\n\n\n\n\n\n\n\n\nTips include:\n\nUse the comment style in RStudio to generate headings with hierarchies, for folding but also to have an outline and quick links to different regions\nDo not save .Rdata or history, so you can always restart the session in a clean environment (because you don’t know what leftovers there are and how they can impact what you’re doing next)."
   },
   {
     "objectID": "slides/index.html#exercise-1",
     "href": "slides/index.html#exercise-1",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Exercise",
     "text": "Exercise\n\nRun the code in “script.R” and fix the bugs necessary for it to run well. Restart R every time you source the file.\nAdd some comments with hierarchies.\n(Optional) Update the settings in R Studio as recommended in the previous slide.\n\n\nPhoto by Brett Jordan on Unsplash"
   },
   {
     "objectID": "slides/index.html#example",
     "href": "slides/index.html#example",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Example",
     "text": "Example\n\ndf&lt;-read.csv( \"Flight Subset 2013.csv\")\ndf$month_name = month.name[df$month]"
   },
   {
     "objectID": "slides/index.html#naming-best-practices",
     "href": "slides/index.html#naming-best-practices",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Naming: Best practices",
     "text": "Naming: Best practices\n\nBeware of / avoid using existing names (e.g. df, c, T, mean)\nAvoid using dots (although Base R does use them)\nFor files: stick to numbers, lowercase letters, _ and - - beware of case!\nFor variables: use lowercase letters, numbers and snake_case.\nGenerally: variables = nouns; functions = verbs"
   },
   {
     "objectID": "slides/index.html#improved-example",
     "href": "slides/index.html#improved-example",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Improved example",
     "text": "Improved example\n\nlibrary(here)\ni_am(\"index.qmd\")\n\nsome_flights&lt;-read.csv(here( 'data' , \"nycflights13_random2000.csv\"))\nsome_flights$month_name = month.name[some_flights$month]"
   },
   {
     "objectID": "slides/index.html#spaces-and-punctuation",
     "href": "slides/index.html#spaces-and-punctuation",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Spaces and punctuation",
     "text": "Spaces and punctuation\n\n\nNo spaces\nApandacomesintoabar\n\nWith spaces\nA panda comes into a bar\n\n\n\n\n\nNo commas\n…eats shoots and leaves.\n\nWith commas\n…eats, shoots, and leaves.\n\n\n\n\nExample\n\nlibrary(here)\ni_am(\"index.qmd\")\n\nsome_flights&lt;-read.csv(here( 'data' , \"nycflights13_random2000.csv\"))\nsome_flights$month_name=month.name[some_flights$month]\nfor(i in 1 : length(some_flights$dep_delay)){\nif(abs(i)&gt;30){print (some_flights $ dep_delay [ i ])}\n}"
   },
   {
     "objectID": "slides/index.html#best-practices",
     "href": "slides/index.html#best-practices",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Best practices",
     "text": "Best practices\n\n\n\nNo spaces between () and text inside.\nUse \"\" instead of '' unless there is already \"\" inside.\nThe assignment operator in R is &lt;-. 1\nThe assignment operator and infix operators should be surrounded by spaces.\n\n\n\nSpaces around the () for for, if and when.\nNo spaces around :, $, [, ^, +…\nSpaces only after () for function arguments.\nDifference between [] and [[]].\nPay attention to indentation!\n\n\n\nUse Alt+- / ⌥+-!"
   },
   {
     "objectID": "slides/index.html#improved-example-1",
     "href": "slides/index.html#improved-example-1",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Improved example",
     "text": "Improved example\nsome_flights&lt;-read.csv(here( 'data' , \"nycflights13_random2000.csv\"))\nsome_flights$month_name=month.name[some_flights$month]\nfor(i in 1 : length(some_flights$dep_delay)){\nif(abs(i)&gt;30){print (some_flights $ dep_delay [ i ])}\n}"
   },
   {
     "objectID": "slides/index.html#improved-example-2",
     "href": "slides/index.html#improved-example-2",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Improved example",
     "text": "Improved example\nsome_flights &lt;- read.csv(here(\"data\", \"nycflights13_random2000.csv\"))\nsome_flights$month_name=month.name[some_flights$month]\nfor(i in 1 : length(some_flights$dep_delay)){\nif(abs(i)&gt;30){print (some_flights $ dep_delay [ i ])}\n}"
   },
   {
     "objectID": "slides/index.html#improved-example-3",
     "href": "slides/index.html#improved-example-3",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Improved example",
     "text": "Improved example\nsome_flights &lt;- read.csv(here(\"data\", \"nycflights13_random2000.csv\"))\nsome_flights$month_name &lt;- month.name[some_flights$month]\nfor(i in 1 : length(some_flights$dep_delay)){\nif(abs(i)&gt;30){print (some_flights $ dep_delay [ i ])}\n}"
   },
   {
     "objectID": "slides/index.html#improved-example-4",
     "href": "slides/index.html#improved-example-4",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Improved example",
     "text": "Improved example\nsome_flights &lt;- read.csv(here(\"data\", \"nycflights13_random2000.csv\"))\nsome_flights$month_name &lt;- month.name[some_flights$month]\nfor (i in 1:length(some_flights$dep_delay)){\nif(abs(i)&gt;30){print (some_flights $ dep_delay [ i ])}\n}"
   },
   {
     "objectID": "slides/index.html#improved-example-5",
     "href": "slides/index.html#improved-example-5",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Improved example",
     "text": "Improved example\nsome_flights &lt;- read.csv(here(\"data\", \"nycflights13_random2000.csv\"))\nsome_flights$month_name &lt;- month.name[some_flights$month]\nfor (i in seq_along(some_flights$dep_delay)){\nif(abs(i)&gt;30){print (some_flights $ dep_delay [ i ])}\n}"
   },
   {
     "objectID": "slides/index.html#improved-example-6",
     "href": "slides/index.html#improved-example-6",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Improved example",
     "text": "Improved example\nsome_flights &lt;- read.csv(here(\"data\", \"nycflights13_random2000.csv\"))\nsome_flights$month_name &lt;- month.name[some_flights$month]\nfor (i in seq_along(some_flights$dep_delay)){\n  if (abs(i) &gt; 30) {\n    print (some_flights $ dep_delay [ i ])\n  }\n}"
   },
   {
     "objectID": "slides/index.html#improved-example-7",
     "href": "slides/index.html#improved-example-7",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Improved example",
     "text": "Improved example\nsome_flights &lt;- read.csv(here(\"data\", \"nycflights13_random2000.csv\"))\nsome_flights$month_name &lt;- month.name[some_flights$month]\nfor (i in seq_along(some_flights$dep_delay)){\n  if (abs(i) &gt; 30) {\n    print(some_flights$dep_delay[i])\n  }\n}\n\nThe seq_along() change is because it is safer in case the vector you use it on is empty. I have a slide about it in case it can be interesting to discuss, but I have hidden it."
   },
   {
     "objectID": "slides/index.html#exercise-2",
     "href": "slides/index.html#exercise-2",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Exercise",
     "text": "Exercise\n\nIn the script, change the name of the dataframe to something more informative.\nFix the spaces and the punctuation.\n\n\n\n\n\n\n\nTip\n\n\nYou may use Ctrl/⌘+F in R Studio to replace all the calls: How many times has the dataframe been called?\nUse the automatic linting of R Studio to fix indentation!\n\n\n\n\nPhoto by Brett Jordan on Unsplash"
   },
   {
     "objectID": "slides/index.html#pipe",
     "href": "slides/index.html#pipe",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Pipe",
     "text": "Pipe\n\nsome_flights &lt;- read.csv(here(\"data\", \"nycflights13_random2000.csv\"))\nsome_flights$month_name &lt;- month.name[some_flights$month]\nsome_flights$carrier &lt;- as.factor(some_flights$carrier)\nsome_flights$tailnum &lt;- as.factor(some_flights$tailnum)\nsome_flights$origin &lt;- as.factor(some_flights$origin)\n\nfor (i in seq_along(some_flights$dep_delay)) {\n  if (is.na(some_flights$dep_delay[[i]])) {\n    some_flights[i, \"dep_delay_cat\"] &lt;- NA\n  } else if (some_flights$dep_delay[[i]] &lt; -30) {\n    some_flights[i, \"dep_delay_cat\"] &lt;- \"Early\"\n  } else if (some_flights$dep_delay[[i]] &lt; 30){\n    some_flights[i, \"dep_delay_cat\"] &lt;- \"Kind of on time\"\n  } else {\n    some_flights[i, \"dep_delay_cat\"] &lt;- \"Late\"\n  }\n}\n\nsome_flights$dep_delay_cat &lt;- as.factor(some_flights$dep_delay_cat)\n\nsome_columns &lt;- c(\"month_name\", \"carrier\", \"tailnum\", \"origin\", \"dep_delay_cat\")\nsome_flights_partial &lt;- some_flights[some_columns]"
   },
   {
     "objectID": "slides/index.html#problems",
     "href": "slides/index.html#problems",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Problems",
     "text": "Problems\n\nThe same variable is overwritten: how to keep track of its state in an interactive session?\nTyping the same thing over and over\n\nrisk of typos\nwhat if you rename the variable?\n\nCopying parts in other variables: what about memory?!"
   },
   {
     "objectID": "slides/index.html#approach",
     "href": "slides/index.html#approach",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Approach",
     "text": "Approach\n\n\n\n\n\n\nUse the pipe!\n\n\n\n{magrittr}’s %&gt;% or R’s |&gt;\n\nKeyboard shortcuts: Ctrl+Shitf+M / ⇧+⌘+M\n\n\n\n(We’ll see it in action in the next section)\n\nParticularly useful in data wrangling and with tidyverse: the output of one function is the input of the next! So, we look at the solution in the next section."
   },
   {
     "objectID": "slides/index.html#multiple-columns-at-once",
     "href": "slides/index.html#multiple-columns-at-once",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Multiple columns at once",
     "text": "Multiple columns at once\n\nlibrary(dplyr)\nlibrary(readr)\n1some_flights_raw &lt;- read_csv(here(\"data\", \"nycflights13_random2000.csv\"))\n2some_flights &lt;- some_flights_raw |&gt;\n3  mutate(across(where(is.character), as.factor))\n4some_flights |&gt; select(where(is.factor))\n\n\n1\n\nSpecific state to which you might want to return\n\n2\n\nNew variable for a new state\n\n3\n\nApply the same transformation to multiple columns\n\n4\n\nInspect a subset of columns based on a condition.\n\n\n\n\n# A tibble: 2,000 × 4\n   carrier tailnum origin dest \n   &lt;fct&gt;   &lt;fct&gt;   &lt;fct&gt;  &lt;fct&gt;\n 1 UA      N75436  EWR    LAS  \n 2 VX      N626VA  JFK    LAX  \n 3 DL      N3739P  LGA    PBI  \n 4 UA      N75436  EWR    MCO  \n 5 B6      N630JB  JFK    FLL  \n 6 EV      N18101  EWR    RDU  \n 7 UA      N807UA  EWR    PDX  \n 8 EV      N16149  EWR    MCI  \n 9 WN      N936WN  EWR    BNA  \n10 FL      N969AT  LGA    ATL  \n# ℹ 1,990 more rows"
   },
   {
     "objectID": "slides/index.html#match-vectors-with-indices",
     "href": "slides/index.html#match-vectors-with-indices",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Match vectors with indices",
     "text": "Match vectors with indices\n\nmonth.name\n\n\n\n [1] \"January\"   \"February\"  \"March\"     \"April\"     \"May\"       \"June\"     \n [7] \"July\"      \"August\"    \"September\" \"October\"   \"November\"  \"December\" \n\n\n\nmonth.name[[3]]\n\n\n\n[1] \"March\"\n\n\n\nmonth.name[c(4, 6, 7)]\n\n\n\n[1] \"April\" \"June\"  \"July\" \n\n\n\nhead(some_flights$month)\n\n\n\n[1] 4 2 8 7 9 1\n\n\n\nmonth.name[head(some_flights$month)]\n\n\n\n[1] \"April\"     \"February\"  \"August\"    \"July\"      \"September\" \"January\""
   },
   {
     "objectID": "slides/index.html#match-vectors-with-indices-1",
     "href": "slides/index.html#match-vectors-with-indices-1",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Match vectors with indices",
     "text": "Match vectors with indices\n\nsome_flights |&gt;\n  mutate(month_name = month.name[month]) |&gt; \n  select(month_name, month)\n\n\n\n# A tibble: 2,000 × 2\n   month_name month\n   &lt;chr&gt;      &lt;dbl&gt;\n 1 April          4\n 2 February       2\n 3 August         8\n 4 July           7\n 5 September      9\n 6 January        1\n 7 August         8\n 8 December      12\n 9 July           7\n10 July           7\n# ℹ 1,990 more rows"
   },
   {
     "objectID": "slides/index.html#turn-numeric-into-categorical-case_when",
     "href": "slides/index.html#turn-numeric-into-categorical-case_when",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Turn numeric into categorical: case_when()",
     "text": "Turn numeric into categorical: case_when()\nfor (i in seq_along(some_flights$dep_delay)) {\n  if (is.na(some_flights$dep_delay[[i]])) {\n    some_flights[i, \"dep_delay_cat\"] &lt;- NA\n  } else if (some_flights$dep_delay[[i]] &lt; -30) {\n    some_flights[i, \"dep_delay_cat\"] &lt;- \"Early\"\n  } else if (some_flights$dep_delay[[i]] &lt; 30) {\n    some_flights[i, \"dep_delay_cat\"] &lt;- \"Kind of on time\"\n  } else {\n    some_flights[i, \"dep_delay_cat\"] &lt;- \"Late\"\n  }\n}"
   },
   {
     "objectID": "slides/index.html#if_else",
     "href": "slides/index.html#if_else",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "if_else()",
-    "text": "if_else()\n\nsome_flights |&gt; \n  mutate(dep_delay_cat = if_else(is.na(dep_delay), NA, \"We have a value\")) |&gt; \n  slice_sample(n = 5, by = dep_delay_cat) |&gt; \n  select(starts_with(\"dep_delay\"))\n\n# A tibble: 10 × 2\n   dep_delay dep_delay_cat  \n       &lt;dbl&gt; &lt;chr&gt;          \n 1        -4 We have a value\n 2        27 We have a value\n 3        -6 We have a value\n 4        -1 We have a value\n 5        -5 We have a value\n 6        NA &lt;NA&gt;           \n 7        NA &lt;NA&gt;           \n 8        NA &lt;NA&gt;           \n 9        NA &lt;NA&gt;           \n10        NA &lt;NA&gt;"
+    "text": "if_else()\n\nsome_flights |&gt; \n  mutate(dep_delay_cat = if_else(is.na(dep_delay), NA, \"We have a value\")) |&gt; \n  slice_sample(n = 5, by = dep_delay_cat) |&gt; \n  select(starts_with(\"dep_delay\"))\n\n# A tibble: 10 × 2\n   dep_delay dep_delay_cat  \n       &lt;dbl&gt; &lt;chr&gt;          \n 1        -2 We have a value\n 2        14 We have a value\n 3        -5 We have a value\n 4         4 We have a value\n 5        -2 We have a value\n 6        NA &lt;NA&gt;           \n 7        NA &lt;NA&gt;           \n 8        NA &lt;NA&gt;           \n 9        NA &lt;NA&gt;           \n10        NA &lt;NA&gt;"
   },
   {
     "objectID": "slides/index.html#case_when",
     "href": "slides/index.html#case_when",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "case_when()",
     "text": "case_when()\nsome_flights |&gt; \n  mutate(dep_delay_cat = case_when(\n    # condition ~ output\n  ))"
   },
   {
     "objectID": "slides/index.html#case_when-1",
     "href": "slides/index.html#case_when-1",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "case_when()",
     "text": "case_when()\nsome_flights |&gt; \n  mutate(dep_delay_cat = case_when(\n    # condition ~ output\n    is.na(dep_delay) ~ NA, # if it is NA, return NA\n    TRUE ~ \"Late\" # else, return \"Late\"\n  ))"
   },
   {
     "objectID": "slides/index.html#case_when-2",
     "href": "slides/index.html#case_when-2",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "case_when()",
     "text": "case_when()\nsome_flights |&gt; \n  mutate(dep_delay_cat = case_when(\n    # condition ~ output\n    is.na(dep_delay) ~ NA, # if it is NA, return NA\n    dep_delay &lt; -30 ~ \"Early\", # else if it is lower than -30 return \"Early\"\n    dep_delay &lt; 30 ~ \"Kind of on time\", # else if it is lower than 30...\n    TRUE ~ \"Late\" # else, return \"Late\"\n  ))"
   },
   {
     "objectID": "slides/index.html#case_when-vs-for-loop",
     "href": "slides/index.html#case_when-vs-for-loop",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "case_when() vs for loop",
     "text": "case_when() vs for loop\n\n\nsome_flights |&gt; \n  mutate(dep_delay_cat = case_when(\n    is.na(dep_delay) ~ NA,\n    dep_delay &lt; -30 ~ \"Early\",\n    dep_delay &lt; 30 ~ \"Kind of on time\",\n    TRUE ~ \"Late\"\n  ))\n\nfor (i in seq_along(some_flights$dep_delay)) {\n  if (is.na(some_flights$dep_delay[[i]])) {\n    some_flights[i, \"dep_delay_cat\"] &lt;- NA\n  } else if (some_flights$dep_delay[[i]] &lt; -30) {\n    some_flights[i, \"dep_delay_cat\"] &lt;- \"Early\"\n  } else if (some_flights$dep_delay[[i]] &lt; 30) {\n    some_flights[i, \"dep_delay_cat\"] &lt;- \"Kind of on time\"\n  } else {\n    some_flights[i, \"dep_delay_cat\"] &lt;- \"Late\"\n  }\n}"
   },
   {
     "objectID": "slides/index.html#improved-example-8",
     "href": "slides/index.html#improved-example-8",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Improved example",
     "text": "Improved example\n\nsome_flights &lt;- some_flights_raw |&gt; \n  mutate(\n1    month_name = month.name[month],\n2    dep_delay_cat = case_when(\n      is.na(dep_delay) ~ NA,\n      dep_delay &lt; -30 ~ \"Early\",\n      dep_delay &lt; 30 ~ \"Kind of on time\",\n      TRUE ~ \"Late\"\n      ),\n3    across(where(is.character), as.factor)\n  )\nsome_flights |&gt; \n  select(month, month_name, dep_delay, dep_delay_cat)\n\n\n1\n\nCreate a column with the names of the months based on the number\n\n2\n\nMake a categorical version of dep_delay.\n\n3\n\nTurn all character columns into factors"
   },
   {
     "objectID": "slides/index.html#improved-example-8-output",
     "href": "slides/index.html#improved-example-8-output",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Improved example",
     "text": "Improved example\n\n# A tibble: 2,000 × 4\n   month month_name dep_delay dep_delay_cat  \n   &lt;dbl&gt; &lt;fct&gt;          &lt;dbl&gt; &lt;fct&gt;          \n 1     4 April             61 Late           \n 2     2 February          -1 Kind of on time\n 3     8 August             0 Kind of on time\n 4     7 July               5 Kind of on time\n 5     9 September         -2 Kind of on time\n 6     1 January            4 Kind of on time\n 7     8 August            -7 Kind of on time\n 8    12 December          14 Kind of on time\n 9     7 July              12 Kind of on time\n10     7 July             365 Late           \n# ℹ 1,990 more rows"
   },
   {
     "objectID": "slides/index.html#multiple-columns-at-once-1",
     "href": "slides/index.html#multiple-columns-at-once-1",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Multiple columns at once",
     "text": "Multiple columns at once\nsome_flights |&gt; \n  mutate(\n    dep_delay_cat = case_when(\n      is.na(dep_delay) ~ NA,\n      dep_delay &lt; -30 ~ \"Early\",\n      dep_delay &lt; 30 ~ \"Kind of on time\",\n      TRUE ~ \"Late\"\n    ) |&gt; as.factor()\n  )"
   },
   {
     "objectID": "slides/index.html#multiple-columns-at-once-2",
     "href": "slides/index.html#multiple-columns-at-once-2",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Multiple columns at once",
     "text": "Multiple columns at once\nsome_flights |&gt; \n  mutate(\n    across(ends_with(\"delay\"),\n    ~ case_when(\n      is.na(dep_delay) ~ NA,\n      dep_delay &lt; -30 ~ \"Early\",\n      dep_delay &lt; 30 ~ \"Kind of on time\",\n      TRUE ~ \"Late\"\n    ) |&gt; as.factor(),\n    .names = \"{.col}_cat\"\n  )"
   },
   {
     "objectID": "slides/index.html#multiple-columns-at-once-3",
     "href": "slides/index.html#multiple-columns-at-once-3",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Multiple columns at once",
     "text": "Multiple columns at once\nsome_flights |&gt; \n  mutate(\n    across(ends_with(\"delay\"),\n    ~ case_when(\n      is.na(dep_delay) ~ NA,\n      dep_delay &lt; -30 ~ \"Early\",\n      dep_delay &lt; 30 ~ \"Kind of on time\",\n      TRUE ~ \"Late\"\n    ) |&gt; factor(levels = c(\"Early\", \"Kind of on time\", \"Late\")),\n    .names = \"{.col}_cat\"\n  )"
   },
   {
     "objectID": "slides/index.html#multiple-columns-at-once-4",
     "href": "slides/index.html#multiple-columns-at-once-4",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Multiple columns at once",
     "text": "Multiple columns at once\n\n\n# A tibble: 2,000 × 4\n   dep_delay arr_delay dep_delay_cat   arr_delay_cat  \n       &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;           &lt;fct&gt;          \n 1        61        33 Late            Late           \n 2        -1       -50 Kind of on time Early          \n 3         0        -6 Kind of on time Kind of on time\n 4         5       -12 Kind of on time Kind of on time\n 5        -2       -10 Kind of on time Kind of on time\n 6         4         4 Kind of on time Kind of on time\n 7        -7       -31 Kind of on time Early          \n 8        14        28 Kind of on time Kind of on time\n 9        12        -5 Kind of on time Kind of on time\n10       365       344 Late            Late           \n# ℹ 1,990 more rows"
   },
   {
     "objectID": "slides/index.html#exercise-3",
     "href": "slides/index.html#exercise-3",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Exercise",
     "text": "Exercise\n\nUse readr::read_csv() to read the file and return a tibble.\nUse the pipe and dplyr::mutate() to modify the character columns into factors.\nUse dplyr::across() and dplyr::case_when() to obtain a categorical version of the delay columns.\n\n\nPhoto by Brett Jordan on Unsplash"
   },
   {
     "objectID": "slides/index.html#comma-separated-values",
     "href": "slides/index.html#comma-separated-values",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Comma-separated values",
     "text": "Comma-separated values\n\ncat_file_name &lt;- here(\"data\", \"flights_with_factors.csv\")\nsome_flights |&gt;\n  select(carrier, flight, month_name, time_hour, contains(\"delay\")) |&gt; \n  write_csv(cat_file_name)\nreadLines(cat_file_name, n = 10)\n\n [1] \"carrier,flight,month_name,time_hour,dep_delay,arr_delay,dep_delay_cat,arr_delay_cat\"\n [2] \"UA,1168,April,2013-04-12T22:00:00Z,61,33,Late,Late\"                                 \n [3] \"VX,407,February,2013-02-28T14:00:00Z,-1,-50,Kind of on time,Early\"                  \n [4] \"DL,1174,August,2013-08-22T15:00:00Z,0,-6,Kind of on time,Kind of on time\"           \n [5] \"UA,1722,July,2013-07-31T10:00:00Z,5,-12,Kind of on time,Kind of on time\"            \n [6] \"B6,1801,September,2013-09-11T20:00:00Z,-2,-10,Kind of on time,Kind of on time\"      \n [7] \"EV,4212,January,2013-01-06T20:00:00Z,4,4,Kind of on time,Kind of on time\"           \n [8] \"UA,671,August,2013-08-26T11:00:00Z,-7,-31,Kind of on time,Early\"                    \n [9] \"EV,4567,December,2013-12-23T15:00:00Z,14,28,Kind of on time,Kind of on time\"        \n[10] \"WN,165,July,2013-07-18T17:00:00Z,12,-5,Kind of on time,Kind of on time\""
   },
   {
     "objectID": "slides/index.html#readr",
     "href": "slides/index.html#readr",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "{readr}",
     "text": "{readr}\n\nread_csv(cat_file_name)\n\n# A tibble: 2,000 × 8\n   carrier flight month_name time_hour           dep_delay arr_delay\n   &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;      &lt;dttm&gt;                  &lt;dbl&gt;     &lt;dbl&gt;\n 1 UA        1168 April      2013-04-12 22:00:00        61        33\n 2 VX         407 February   2013-02-28 14:00:00        -1       -50\n 3 DL        1174 August     2013-08-22 15:00:00         0        -6\n 4 UA        1722 July       2013-07-31 10:00:00         5       -12\n 5 B6        1801 September  2013-09-11 20:00:00        -2       -10\n 6 EV        4212 January    2013-01-06 20:00:00         4         4\n 7 UA         671 August     2013-08-26 11:00:00        -7       -31\n 8 EV        4567 December   2013-12-23 15:00:00        14        28\n 9 WN         165 July       2013-07-18 17:00:00        12        -5\n10 FL         778 July       2013-07-22 22:00:00       365       344\n# ℹ 1,990 more rows\n# ℹ 2 more variables: dep_delay_cat &lt;chr&gt;, arr_delay_cat &lt;chr&gt;\n\n\n\nI have two more slides (hidden) about readr parsing columns and one comparing it to base R functions but it might be too much"
   },
   {
     "objectID": "slides/index.html#x-separated-values",
     "href": "slides/index.html#x-separated-values",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "X-separated values…",
     "text": "X-separated values…\n\n\nValues separated by spaces (readr::read_table())\ncol1 col2 col3\n1.5 2.2 3\n4 5 6\n7 8 9\n\nComma separated values (readr::read_csv())\ncol1,col2,col3\n1.5,2.2,3\n4,5,6\n7,8,9\n\n\n\n\n\nValues separated by semicolons (readr::read_csv2())\ncol1;col2;col3\n1,5;2,2;3\n4;5;6\n7;8;9\n\nTab-separated values (readr::read_tsv())\ncol1    col2    col3\n1,5 something;semicolon 3\ntext,with,commas    wha a a t   6\n7   8   9"
   },
   {
     "objectID": "slides/index.html#rds-.rda-.rdata-other-formats",
     "href": "slides/index.html#rds-.rda-.rdata-other-formats",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": ".rds, .rda, .Rdata, other formats",
     "text": ".rds, .rda, .Rdata, other formats\n\n\n\n\n\n\n\n\n\n\nFile type\nSave\nOpen\nPros\nCons\n\n\n\n\n.rda/.Rdata1\nsave()\nload()\nSave multiple R objects as they are\nOnly R can open it; modifies variables\n\n\n.rds\nsaveRDS()\nreadRDS()\nSave single R object as it is\nOnly R can open it.\n\n\n.txt, .csv…\nwrite.csv()…\nread.csv()…\nPlain text: interoperable\nNot just any R object\n\n\n\nOutside of (data) packages."
   },
   {
     "objectID": "slides/index.html#literate-programming",
     "href": "slides/index.html#literate-programming",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Literate programming",
     "text": "Literate programming\n\n\n\n{rmarkdown}, {bookdown}…\nQuarto\n\n\n---\ntitle: \"Great code report\"\nauthor: \"A responsible researcher\"\n---\n\n```{r}\n#| include: false\nlibrary(here)\nlibrary(readr)\nmy_data &lt;- read_csv(\"path/to/data\")\n```\n\nI will show a dataset with `r nrow(my_data)` rows.\n\n```{r}\nknitr::kable(my_data)\n```"
   },
   {
     "objectID": "slides/index.html#exercise-4",
     "href": "slides/index.html#exercise-4",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "Exercise",
     "text": "Exercise\n\nSave the filtered dataset as a file with comma-separated values, in a new folder called “output”.\n\n\nPhoto by Brett Jordan on Unsplash"
   },
   {
     "objectID": "slides/index.html#section-2",
     "href": "slides/index.html#section-2",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "",
     "text": "Online books\n\nR for Data Science (2e)\nAdvanced R\nHappy Git and Github for the useR\n\nBlogposts\n\nTidyverse styleguide\nProject oriented workflows\nA project from scratch \n\nYouTube\n\nJenny Bryan | Object of type ‘closure’ is not subsettable\nHadley Wickham | The Joy of functional programming"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Best Practices in R",
+    "title": "R Best Practices",
     "section": "",
-    "text": "The goal of this training is to build better practices with programming in R, in order to enhance your productivity in research, and to minimize the time you spend on fixing, rewriting and debugging your R scripts.\nTo achieve this, you will learn how to start using R projects, and how to integrate version control with Github into your projects.\nWe’ll look at syntax conventions and debugging tools, and we practice upgrading quick-and-dirty scripts to versatile R code.\nTo this end, we explain the theory and provide examples and hands-on to consolidate best pracices in R.\nThe idea is to learn how to create clean, readable, versatile and reproducible R workflows, which help boosting your scientific productivity and collaboration.\n\nLearning outcomes\nWhen you complete this training you will\n\nknow how to create and use R projects\nbe able to store or publish your R project in GitHub\nbe able to debug your code with R Studio tools\nknow how to make your code reproducible and communicate it\nhave an idea of style guidelines and their importance\nbe able to make your code cleaner and more compact\nknow the difference between some useful file formats\nknow about literate programming\n\n\n\nSchedule\nTotal duration: 3 hours\nTBD\n\n\nTraining materials\n\n\n\n\n\nPrerequisites\nYou will need some experience with R, and a GitHub account. You should also have R, R Studio and Git installed (or a vsc account and access to Open OnDemand).\n\n\nTrainers\n\nMariana Montes (mariana.montes@kuleuven.be)"
+    "text": "The goal of this training is to build better practices with programming in R, in order to enhance your productivity in research, and to minimize the time you spend on fixing, rewriting and debugging your R scripts.\nTo achieve this, you will learn how to start using R projects, and how to integrate version control with Github into your projects.\nWe’ll look at syntax conventions and debugging tools, and we practice upgrading quick-and-dirty scripts to versatile R code.\nTo this end, we explain the theory and provide examples and hands-on to consolidate best practices in R.\nThe idea is to learn how to create clean, readable, versatile and reproducible R workflows, which help boosting your scientific productivity and collaboration.\n\nLearning outcomes\nWhen you complete this training you will\n\nknow how to create and use R projects\nbe able to store or publish your R project in GitHub\nbe able to debug your code with R Studio tools\nknow how to make your code reproducible and communicate it\nhave an idea of style guidelines and their importance\nbe able to make your code cleaner, more compact and more readable\nknow the difference between some useful file formats\nknow about literate programming\n\n\n\nSchedule\nTotal duration: 3 hours\n\n\nTraining materials\n\nYou will need to fork the repository of the course.\n\n\n\n\n\n\nPrerequisites\nYou will need some experience with R, and a GitHub account. You should also have R, R Studio and Git installed (or a vsc account and access to Open OnDemand).\n\n\nTrainers\n\nMariana Montes (mariana.montes@kuleuven.be)"
   }
 ]
